@@ -1,0 +1,103 @@
+query UserByEmail($email: String!) {
+  users(limit: 1, where: {email: {_eq: $email}}) {
+    id
+    name
+    email
+    emailVerified
+  }
+}
+
+mutation CreateVerificationToken($expires: timestamptz!, $email: String!, $token: String!) {
+  insert_tokens_one(object: {expires: $expires, email: $email, token: $token}) {
+    email
+  }
+}
+
+mutation UseVerificationToken($token: String!) {
+  delete_tokens(where: {token: {_eq: $token}}) {
+    affected_rows
+    returning {
+      expires
+    }
+  }
+}
+
+
+mutation VerifyEmailByEmail($email: String = "", $id: Int = 0) {
+  update_users(where: {_or: [{email: {_eq: $email}}, {id: {_eq: $id}}]}, _set: {emailVerified: "now()"}) {
+    returning {
+      emailVerified
+      id
+      name
+      email
+    }
+  }
+}
+
+
+fragment AdapterUser on users {
+    email
+    emailVerified
+    id
+    name
+}
+
+query GetSessionAndUser($sessionToken: String!) {
+  sessions_by_pk(sessionToken: $sessionToken) {
+    user {
+        ...AdapterUser
+    }
+    expires
+    id
+  }
+}
+
+mutation DeleteSession($sessionToken: String!) {
+  delete_sessions_by_pk(sessionToken: $sessionToken) {
+    expires
+    id
+    userId
+  }
+}
+
+mutation CreateSession($sessionToken: String!, $userId: Int!, $expires: timestamptz!) {
+  insert_sessions_one(object: {sessionToken: $sessionToken, expires: $expires, userId: $userId}) {
+    id
+  }
+}
+
+mutation CreateUser($email: String!, $name: String!) {
+  insert_users_one(object: {email: $email, name: $name}) {
+    id
+  }
+}
+
+query GetUser($id: Int!) {
+  users_by_pk(id: $id) {
+    ...AdapterUser
+  }
+}
+
+query GetUserByAccount($provider: String!, $providerAccountId: String!) {
+  providers_by_pk(provider: $provider, providerAccountId: $providerAccountId) {
+    user {
+      ...AdapterUser
+    }
+  }
+}
+
+mutation LinkAccount($provider: String!, $providerAccountId: String!, $userId: Int!) {
+  insert_providers_one(object: {provider: $provider, providerAccountId: $providerAccountId, userId: $userId}, on_conflict: {constraint: providers_pkey, update_columns: providerAccountId}) {
+    userId
+  }
+}
+
+query UpdateSession($sessionToken: String!) {
+  sessions_by_pk(sessionToken: $sessionToken) {
+    expires
+    id
+    sessionToken
+    userId
+  }
+}
+

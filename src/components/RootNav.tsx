@@ -1,19 +1,42 @@
-import { Navbar, Container } from 'react-bootstrap'
+import { signIn, signOut, useSession } from 'next-auth/react'
+import {
+  Navbar, Container, NavDropdown, Button,
+} from 'react-bootstrap'
+import UserCount from './UserCount'
 
-const RootNav = ({ children } : {children : JSX.Element}) => (
-  <div>
-    <Navbar variant="dark" bg="secondary">
-      <Navbar.Brand href="/" style={{ marginLeft: '1em', textTransform: 'capitalize' }}>
-        {process.env.NEXT_PUBLIC_APP_NAME}
-      </Navbar.Brand>
-      <Navbar.Text>
-        {`v${process.env.NEXT_PUBLIC_APP_VERSION}`}
-      </Navbar.Text>
-    </Navbar>
-    <Container style={{ marginTop: '1em' }}>
-      {children}
-    </Container>
-  </div>
-)
+const RootNav = ({ children } : {children : JSX.Element}) => {
+  const user = useSession().data?.user
+  return (
+    <div>
+      <Navbar variant="dark" bg="secondary">
+        <Navbar.Brand href="/" style={{ marginLeft: '1em', textTransform: 'capitalize' }}>
+          {process.env.NEXT_PUBLIC_APP_NAME}
+        </Navbar.Brand>
+        <Navbar.Text>
+          {`v${process.env.NEXT_PUBLIC_APP_VERSION}`}
+        </Navbar.Text>
+        <Navbar.Text className="ms-3">
+          <UserCount />
+        </Navbar.Text>
+        {
+          user ? (
+            <NavDropdown title={user.name} className="ms-auto">
+              <NavDropdown.Item onClick={() => signOut()}>
+                Sign Out
+              </NavDropdown.Item>
+            </NavDropdown>
+          ) : (
+            <Button onClick={() => signIn()} className="ms-auto me-3">
+              Sign In
+            </Button>
+          )
+        }
+      </Navbar>
+      <Container style={{ marginTop: '1em' }}>
+        {children}
+      </Container>
+    </div>
+  )
+}
 
 export default RootNav

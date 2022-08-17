@@ -9,6 +9,7 @@ module.exports = {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
   },
+  ignorePatterns: ['src/apollo/types.ts'],
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
@@ -29,6 +30,6 @@ module.exports = {
       unnamedComponents: 'arrow-function',
     }],
     'react/react-in-jsx-scope': 0,
-    'import/extensions': ['error', 'always', { tsx: 'never', js: 'never' }],
+    'import/extensions': ['error', 'always', { tsx: 'never', js: 'never', ts: 'never' }],
   },
 }

@@ -1,0 +1,7 @@
+subscription UserCount {
+  users_aggregate {
+    aggregate {
+      count
+    }
+  }
+}

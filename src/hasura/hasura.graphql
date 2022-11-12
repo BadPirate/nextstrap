@@ -23,7 +23,7 @@ mutation UseVerificationToken($token: String!) {
 }
 
 
-mutation VerifyEmailByEmail($email: String = "", $id: Int = 0) {
+mutation VerifyEmailByEmail($email: String = "", $id: uuid = "") {
   update_users(where: {_or: [{email: {_eq: $email}}, {id: {_eq: $id}}]}, _set: {emailVerified: "now()"}) {
     returning {
       emailVerified
@@ -60,19 +60,19 @@ mutation DeleteSession($sessionToken: String!) {
   }
 }
 
-mutation CreateSession($sessionToken: String!, $userId: Int!, $expires: timestamptz!) {
+mutation CreateSession($sessionToken: String!, $userId: uuid!, $expires: timestamptz!) {
   insert_sessions_one(object: {sessionToken: $sessionToken, expires: $expires, userId: $userId}) {
     id
   }
 }
 
-mutation CreateUser($email: String!, $name: String!) {
+mutation CreateUser($email: String!, $name: String) {
   insert_users_one(object: {email: $email, name: $name}) {
     id
   }
 }
 
-query GetUser($id: Int!) {
+query GetUser($id: uuid!) {
   users_by_pk(id: $id) {
     ...AdapterUser
   }
@@ -86,7 +86,7 @@ query GetUserByAccount($provider: String!, $providerAccountId: String!) {
   }
 }
 
-mutation LinkAccount($provider: String!, $providerAccountId: String!, $userId: Int!) {
+mutation LinkAccount($provider: String!, $providerAccountId: String!, $userId: uuid!) {
   insert_providers_one(object: {provider: $provider, providerAccountId: $providerAccountId, userId: $userId}, on_conflict: {constraint: providers_pkey, update_columns: providerAccountId}) {
     userId
   }

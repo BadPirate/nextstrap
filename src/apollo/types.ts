@@ -14,19 +14,7 @@ export type Scalars = {
   Int: number;
   Float: number;
   timestamptz: any;
-};
-
-/** Boolean expression to compare columns of type "Int". All fields are combined with logical 'AND'. */
-export type Int_Comparison_Exp = {
-  _eq?: InputMaybe<Scalars['Int']>;
-  _gt?: InputMaybe<Scalars['Int']>;
-  _gte?: InputMaybe<Scalars['Int']>;
-  _in?: InputMaybe<Array<Scalars['Int']>>;
-  _is_null?: InputMaybe<Scalars['Boolean']>;
-  _lt?: InputMaybe<Scalars['Int']>;
-  _lte?: InputMaybe<Scalars['Int']>;
-  _neq?: InputMaybe<Scalars['Int']>;
-  _nin?: InputMaybe<Array<Scalars['Int']>>;
+  uuid: any;
 };
 
 /** Boolean expression to compare columns of type "String". All fields are combined with logical 'AND'. */
@@ -61,6 +49,14 @@ export type String_Comparison_Exp = {
   /** does the column match the given SQL regular expression */
   _similar?: InputMaybe<Scalars['String']>;
 };
+
+/** ordering argument of a cursor */
+export enum Cursor_Ordering {
+  /** ascending ordering of the cursor */
+  Asc = 'ASC',
+  /** descending ordering of the cursor */
+  Desc = 'DESC'
+}
 
 /** mutation root */
 export type Mutation_Root = {
@@ -101,18 +97,26 @@ export type Mutation_Root = {
   update_providers?: Maybe<Providers_Mutation_Response>;
   /** update single row of the table: "providers" */
   update_providers_by_pk?: Maybe<Providers>;
+  /** update multiples rows of table: "providers" */
+  update_providers_many?: Maybe<Array<Maybe<Providers_Mutation_Response>>>;
   /** update data of the table: "sessions" */
   update_sessions?: Maybe<Sessions_Mutation_Response>;
   /** update single row of the table: "sessions" */
   update_sessions_by_pk?: Maybe<Sessions>;
+  /** update multiples rows of table: "sessions" */
+  update_sessions_many?: Maybe<Array<Maybe<Sessions_Mutation_Response>>>;
   /** update data of the table: "tokens" */
   update_tokens?: Maybe<Tokens_Mutation_Response>;
   /** update single row of the table: "tokens" */
   update_tokens_by_pk?: Maybe<Tokens>;
+  /** update multiples rows of table: "tokens" */
+  update_tokens_many?: Maybe<Array<Maybe<Tokens_Mutation_Response>>>;
   /** update data of the table: "users" */
   update_users?: Maybe<Users_Mutation_Response>;
   /** update single row of the table: "users" */
   update_users_by_pk?: Maybe<Users>;
+  /** update multiples rows of table: "users" */
+  update_users_many?: Maybe<Array<Maybe<Users_Mutation_Response>>>;
 };
 
 
@@ -161,7 +165,7 @@ export type Mutation_RootDelete_UsersArgs = {
 
 /** mutation root */
 export type Mutation_RootDelete_Users_By_PkArgs = {
-  id: Scalars['Int'];
+  id: Scalars['uuid'];
 };
 
 
@@ -223,7 +227,6 @@ export type Mutation_RootInsert_Users_OneArgs = {
 
 /** mutation root */
 export type Mutation_RootUpdate_ProvidersArgs = {
-  _inc?: InputMaybe<Providers_Inc_Input>;
   _set?: InputMaybe<Providers_Set_Input>;
   where: Providers_Bool_Exp;
 };
@@ -231,15 +234,19 @@ export type Mutation_RootUpdate_ProvidersArgs = {
 
 /** mutation root */
 export type Mutation_RootUpdate_Providers_By_PkArgs = {
-  _inc?: InputMaybe<Providers_Inc_Input>;
   _set?: InputMaybe<Providers_Set_Input>;
   pk_columns: Providers_Pk_Columns_Input;
 };
 
 
 /** mutation root */
+export type Mutation_RootUpdate_Providers_ManyArgs = {
+  updates: Array<Providers_Updates>;
+};
+
+
+/** mutation root */
 export type Mutation_RootUpdate_SessionsArgs = {
-  _inc?: InputMaybe<Sessions_Inc_Input>;
   _set?: InputMaybe<Sessions_Set_Input>;
   where: Sessions_Bool_Exp;
 };
@@ -247,9 +254,14 @@ export type Mutation_RootUpdate_SessionsArgs = {
 
 /** mutation root */
 export type Mutation_RootUpdate_Sessions_By_PkArgs = {
-  _inc?: InputMaybe<Sessions_Inc_Input>;
   _set?: InputMaybe<Sessions_Set_Input>;
   pk_columns: Sessions_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Sessions_ManyArgs = {
+  updates: Array<Sessions_Updates>;
 };
 
 
@@ -268,8 +280,13 @@ export type Mutation_RootUpdate_Tokens_By_PkArgs = {
 
 
 /** mutation root */
+export type Mutation_RootUpdate_Tokens_ManyArgs = {
+  updates: Array<Tokens_Updates>;
+};
+
+
+/** mutation root */
 export type Mutation_RootUpdate_UsersArgs = {
-  _inc?: InputMaybe<Users_Inc_Input>;
   _set?: InputMaybe<Users_Set_Input>;
   where: Users_Bool_Exp;
 };
@@ -277,9 +294,14 @@ export type Mutation_RootUpdate_UsersArgs = {
 
 /** mutation root */
 export type Mutation_RootUpdate_Users_By_PkArgs = {
-  _inc?: InputMaybe<Users_Inc_Input>;
   _set?: InputMaybe<Users_Set_Input>;
   pk_columns: Users_Pk_Columns_Input;
+};
+
+
+/** mutation root */
+export type Mutation_RootUpdate_Users_ManyArgs = {
+  updates: Array<Users_Updates>;
 };
 
 /** column ordering options */
@@ -305,7 +327,7 @@ export type Providers = {
   providerAccountId: Scalars['String'];
   /** An object relationship */
   user: Users;
-  userId: Scalars['Int'];
+  userId: Scalars['uuid'];
 };
 
 /** aggregated selection of "providers" */
@@ -318,17 +340,9 @@ export type Providers_Aggregate = {
 /** aggregate fields of "providers" */
 export type Providers_Aggregate_Fields = {
   __typename?: 'providers_aggregate_fields';
-  avg?: Maybe<Providers_Avg_Fields>;
   count: Scalars['Int'];
   max?: Maybe<Providers_Max_Fields>;
   min?: Maybe<Providers_Min_Fields>;
-  stddev?: Maybe<Providers_Stddev_Fields>;
-  stddev_pop?: Maybe<Providers_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Providers_Stddev_Samp_Fields>;
-  sum?: Maybe<Providers_Sum_Fields>;
-  var_pop?: Maybe<Providers_Var_Pop_Fields>;
-  var_samp?: Maybe<Providers_Var_Samp_Fields>;
-  variance?: Maybe<Providers_Variance_Fields>;
 };
 
 
@@ -336,12 +350,6 @@ export type Providers_Aggregate_Fields = {
 export type Providers_Aggregate_FieldsCountArgs = {
   columns?: InputMaybe<Array<Providers_Select_Column>>;
   distinct?: InputMaybe<Scalars['Boolean']>;
-};
-
-/** aggregate avg on columns */
-export type Providers_Avg_Fields = {
-  __typename?: 'providers_avg_fields';
-  userId?: Maybe<Scalars['Float']>;
 };
 
 /** Boolean expression to filter rows from the table "providers". All fields are combined with a logical 'AND'. */
@@ -352,26 +360,21 @@ export type Providers_Bool_Exp = {
   provider?: InputMaybe<String_Comparison_Exp>;
   providerAccountId?: InputMaybe<String_Comparison_Exp>;
   user?: InputMaybe<Users_Bool_Exp>;
-  userId?: InputMaybe<Int_Comparison_Exp>;
+  userId?: InputMaybe<Uuid_Comparison_Exp>;
 };
 
 /** unique or primary key constraints on table "providers" */
 export enum Providers_Constraint {
-  /** unique or primary key constraint */
+  /** unique or primary key constraint on columns "provider", "providerAccountId" */
   ProvidersPkey = 'providers_pkey'
 }
-
-/** input type for incrementing numeric columns in table "providers" */
-export type Providers_Inc_Input = {
-  userId?: InputMaybe<Scalars['Int']>;
-};
 
 /** input type for inserting data into table "providers" */
 export type Providers_Insert_Input = {
   provider?: InputMaybe<Scalars['String']>;
   providerAccountId?: InputMaybe<Scalars['String']>;
   user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
-  userId?: InputMaybe<Scalars['Int']>;
+  userId?: InputMaybe<Scalars['uuid']>;
 };
 
 /** aggregate max on columns */
@@ -379,7 +382,7 @@ export type Providers_Max_Fields = {
   __typename?: 'providers_max_fields';
   provider?: Maybe<Scalars['String']>;
   providerAccountId?: Maybe<Scalars['String']>;
-  userId?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['uuid']>;
 };
 
 /** aggregate min on columns */
@@ -387,7 +390,7 @@ export type Providers_Min_Fields = {
   __typename?: 'providers_min_fields';
   provider?: Maybe<Scalars['String']>;
   providerAccountId?: Maybe<Scalars['String']>;
-  userId?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['uuid']>;
 };
 
 /** response of any mutation on the table "providers" */
@@ -399,7 +402,7 @@ export type Providers_Mutation_Response = {
   returning: Array<Providers>;
 };
 
-/** on conflict condition type for table "providers" */
+/** on_conflict condition type for table "providers" */
 export type Providers_On_Conflict = {
   constraint: Providers_Constraint;
   update_columns?: Array<Providers_Update_Column>;
@@ -434,31 +437,22 @@ export enum Providers_Select_Column {
 export type Providers_Set_Input = {
   provider?: InputMaybe<Scalars['String']>;
   providerAccountId?: InputMaybe<Scalars['String']>;
-  userId?: InputMaybe<Scalars['Int']>;
+  userId?: InputMaybe<Scalars['uuid']>;
 };
 
-/** aggregate stddev on columns */
-export type Providers_Stddev_Fields = {
-  __typename?: 'providers_stddev_fields';
-  userId?: Maybe<Scalars['Float']>;
+/** Streaming cursor of the table "providers" */
+export type Providers_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Providers_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
 };
 
-/** aggregate stddev_pop on columns */
-export type Providers_Stddev_Pop_Fields = {
-  __typename?: 'providers_stddev_pop_fields';
-  userId?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Providers_Stddev_Samp_Fields = {
-  __typename?: 'providers_stddev_samp_fields';
-  userId?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate sum on columns */
-export type Providers_Sum_Fields = {
-  __typename?: 'providers_sum_fields';
-  userId?: Maybe<Scalars['Int']>;
+/** Initial value of the column from where the streaming should start */
+export type Providers_Stream_Cursor_Value_Input = {
+  provider?: InputMaybe<Scalars['String']>;
+  providerAccountId?: InputMaybe<Scalars['String']>;
+  userId?: InputMaybe<Scalars['uuid']>;
 };
 
 /** update columns of table "providers" */
@@ -471,22 +465,10 @@ export enum Providers_Update_Column {
   UserId = 'userId'
 }
 
-/** aggregate var_pop on columns */
-export type Providers_Var_Pop_Fields = {
-  __typename?: 'providers_var_pop_fields';
-  userId?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate var_samp on columns */
-export type Providers_Var_Samp_Fields = {
-  __typename?: 'providers_var_samp_fields';
-  userId?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate variance on columns */
-export type Providers_Variance_Fields = {
-  __typename?: 'providers_variance_fields';
-  userId?: Maybe<Scalars['Float']>;
+export type Providers_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Providers_Set_Input>;
+  where: Providers_Bool_Exp;
 };
 
 export type Query_Root = {
@@ -607,18 +589,18 @@ export type Query_RootUsers_AggregateArgs = {
 
 
 export type Query_RootUsers_By_PkArgs = {
-  id: Scalars['Int'];
+  id: Scalars['uuid'];
 };
 
 /** columns and relationships of "sessions" */
 export type Sessions = {
   __typename?: 'sessions';
   expires: Scalars['timestamptz'];
-  id: Scalars['Int'];
+  id: Scalars['uuid'];
   sessionToken: Scalars['String'];
   /** An object relationship */
   user: Users;
-  userId: Scalars['Int'];
+  userId: Scalars['uuid'];
 };
 
 /** aggregated selection of "sessions" */
@@ -631,17 +613,9 @@ export type Sessions_Aggregate = {
 /** aggregate fields of "sessions" */
 export type Sessions_Aggregate_Fields = {
   __typename?: 'sessions_aggregate_fields';
-  avg?: Maybe<Sessions_Avg_Fields>;
   count: Scalars['Int'];
   max?: Maybe<Sessions_Max_Fields>;
   min?: Maybe<Sessions_Min_Fields>;
-  stddev?: Maybe<Sessions_Stddev_Fields>;
-  stddev_pop?: Maybe<Sessions_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Sessions_Stddev_Samp_Fields>;
-  sum?: Maybe<Sessions_Sum_Fields>;
-  var_pop?: Maybe<Sessions_Var_Pop_Fields>;
-  var_samp?: Maybe<Sessions_Var_Samp_Fields>;
-  variance?: Maybe<Sessions_Variance_Fields>;
 };
 
 
@@ -651,62 +625,49 @@ export type Sessions_Aggregate_FieldsCountArgs = {
   distinct?: InputMaybe<Scalars['Boolean']>;
 };
 
-/** aggregate avg on columns */
-export type Sessions_Avg_Fields = {
-  __typename?: 'sessions_avg_fields';
-  id?: Maybe<Scalars['Float']>;
-  userId?: Maybe<Scalars['Float']>;
-};
-
 /** Boolean expression to filter rows from the table "sessions". All fields are combined with a logical 'AND'. */
 export type Sessions_Bool_Exp = {
   _and?: InputMaybe<Array<Sessions_Bool_Exp>>;
   _not?: InputMaybe<Sessions_Bool_Exp>;
   _or?: InputMaybe<Array<Sessions_Bool_Exp>>;
   expires?: InputMaybe<Timestamptz_Comparison_Exp>;
-  id?: InputMaybe<Int_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
   sessionToken?: InputMaybe<String_Comparison_Exp>;
   user?: InputMaybe<Users_Bool_Exp>;
-  userId?: InputMaybe<Int_Comparison_Exp>;
+  userId?: InputMaybe<Uuid_Comparison_Exp>;
 };
 
 /** unique or primary key constraints on table "sessions" */
 export enum Sessions_Constraint {
-  /** unique or primary key constraint */
+  /** unique or primary key constraint on columns "sessionToken" */
   SessionsPkey = 'sessions_pkey'
 }
-
-/** input type for incrementing numeric columns in table "sessions" */
-export type Sessions_Inc_Input = {
-  id?: InputMaybe<Scalars['Int']>;
-  userId?: InputMaybe<Scalars['Int']>;
-};
 
 /** input type for inserting data into table "sessions" */
 export type Sessions_Insert_Input = {
   expires?: InputMaybe<Scalars['timestamptz']>;
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['uuid']>;
   sessionToken?: InputMaybe<Scalars['String']>;
   user?: InputMaybe<Users_Obj_Rel_Insert_Input>;
-  userId?: InputMaybe<Scalars['Int']>;
+  userId?: InputMaybe<Scalars['uuid']>;
 };
 
 /** aggregate max on columns */
 export type Sessions_Max_Fields = {
   __typename?: 'sessions_max_fields';
   expires?: Maybe<Scalars['timestamptz']>;
-  id?: Maybe<Scalars['Int']>;
+  id?: Maybe<Scalars['uuid']>;
   sessionToken?: Maybe<Scalars['String']>;
-  userId?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['uuid']>;
 };
 
 /** aggregate min on columns */
 export type Sessions_Min_Fields = {
   __typename?: 'sessions_min_fields';
   expires?: Maybe<Scalars['timestamptz']>;
-  id?: Maybe<Scalars['Int']>;
+  id?: Maybe<Scalars['uuid']>;
   sessionToken?: Maybe<Scalars['String']>;
-  userId?: Maybe<Scalars['Int']>;
+  userId?: Maybe<Scalars['uuid']>;
 };
 
 /** response of any mutation on the table "sessions" */
@@ -718,7 +679,7 @@ export type Sessions_Mutation_Response = {
   returning: Array<Sessions>;
 };
 
-/** on conflict condition type for table "sessions" */
+/** on_conflict condition type for table "sessions" */
 export type Sessions_On_Conflict = {
   constraint: Sessions_Constraint;
   update_columns?: Array<Sessions_Update_Column>;
@@ -754,37 +715,25 @@ export enum Sessions_Select_Column {
 /** input type for updating data in table "sessions" */
 export type Sessions_Set_Input = {
   expires?: InputMaybe<Scalars['timestamptz']>;
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['uuid']>;
   sessionToken?: InputMaybe<Scalars['String']>;
-  userId?: InputMaybe<Scalars['Int']>;
+  userId?: InputMaybe<Scalars['uuid']>;
 };
 
-/** aggregate stddev on columns */
-export type Sessions_Stddev_Fields = {
-  __typename?: 'sessions_stddev_fields';
-  id?: Maybe<Scalars['Float']>;
-  userId?: Maybe<Scalars['Float']>;
+/** Streaming cursor of the table "sessions" */
+export type Sessions_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Sessions_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
 };
 
-/** aggregate stddev_pop on columns */
-export type Sessions_Stddev_Pop_Fields = {
-  __typename?: 'sessions_stddev_pop_fields';
-  id?: Maybe<Scalars['Float']>;
-  userId?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Sessions_Stddev_Samp_Fields = {
-  __typename?: 'sessions_stddev_samp_fields';
-  id?: Maybe<Scalars['Float']>;
-  userId?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate sum on columns */
-export type Sessions_Sum_Fields = {
-  __typename?: 'sessions_sum_fields';
-  id?: Maybe<Scalars['Int']>;
-  userId?: Maybe<Scalars['Int']>;
+/** Initial value of the column from where the streaming should start */
+export type Sessions_Stream_Cursor_Value_Input = {
+  expires?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  sessionToken?: InputMaybe<Scalars['String']>;
+  userId?: InputMaybe<Scalars['uuid']>;
 };
 
 /** update columns of table "sessions" */
@@ -799,25 +748,10 @@ export enum Sessions_Update_Column {
   UserId = 'userId'
 }
 
-/** aggregate var_pop on columns */
-export type Sessions_Var_Pop_Fields = {
-  __typename?: 'sessions_var_pop_fields';
-  id?: Maybe<Scalars['Float']>;
-  userId?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate var_samp on columns */
-export type Sessions_Var_Samp_Fields = {
-  __typename?: 'sessions_var_samp_fields';
-  id?: Maybe<Scalars['Float']>;
-  userId?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate variance on columns */
-export type Sessions_Variance_Fields = {
-  __typename?: 'sessions_variance_fields';
-  id?: Maybe<Scalars['Float']>;
-  userId?: Maybe<Scalars['Float']>;
+export type Sessions_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Sessions_Set_Input>;
+  where: Sessions_Bool_Exp;
 };
 
 export type Subscription_Root = {
@@ -828,24 +762,32 @@ export type Subscription_Root = {
   providers_aggregate: Providers_Aggregate;
   /** fetch data from the table: "providers" using primary key columns */
   providers_by_pk?: Maybe<Providers>;
+  /** fetch data from the table in a streaming manner: "providers" */
+  providers_stream: Array<Providers>;
   /** fetch data from the table: "sessions" */
   sessions: Array<Sessions>;
   /** fetch aggregated fields from the table: "sessions" */
   sessions_aggregate: Sessions_Aggregate;
   /** fetch data from the table: "sessions" using primary key columns */
   sessions_by_pk?: Maybe<Sessions>;
+  /** fetch data from the table in a streaming manner: "sessions" */
+  sessions_stream: Array<Sessions>;
   /** fetch data from the table: "tokens" */
   tokens: Array<Tokens>;
   /** fetch aggregated fields from the table: "tokens" */
   tokens_aggregate: Tokens_Aggregate;
   /** fetch data from the table: "tokens" using primary key columns */
   tokens_by_pk?: Maybe<Tokens>;
+  /** fetch data from the table in a streaming manner: "tokens" */
+  tokens_stream: Array<Tokens>;
   /** fetch data from the table: "users" */
   users: Array<Users>;
   /** fetch aggregated fields from the table: "users" */
   users_aggregate: Users_Aggregate;
   /** fetch data from the table: "users" using primary key columns */
   users_by_pk?: Maybe<Users>;
+  /** fetch data from the table in a streaming manner: "users" */
+  users_stream: Array<Users>;
 };
 
 
@@ -873,6 +815,13 @@ export type Subscription_RootProviders_By_PkArgs = {
 };
 
 
+export type Subscription_RootProviders_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<Providers_Stream_Cursor_Input>>;
+  where?: InputMaybe<Providers_Bool_Exp>;
+};
+
+
 export type Subscription_RootSessionsArgs = {
   distinct_on?: InputMaybe<Array<Sessions_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -893,6 +842,13 @@ export type Subscription_RootSessions_AggregateArgs = {
 
 export type Subscription_RootSessions_By_PkArgs = {
   sessionToken: Scalars['String'];
+};
+
+
+export type Subscription_RootSessions_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<Sessions_Stream_Cursor_Input>>;
+  where?: InputMaybe<Sessions_Bool_Exp>;
 };
 
 
@@ -919,6 +875,13 @@ export type Subscription_RootTokens_By_PkArgs = {
 };
 
 
+export type Subscription_RootTokens_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<Tokens_Stream_Cursor_Input>>;
+  where?: InputMaybe<Tokens_Bool_Exp>;
+};
+
+
 export type Subscription_RootUsersArgs = {
   distinct_on?: InputMaybe<Array<Users_Select_Column>>;
   limit?: InputMaybe<Scalars['Int']>;
@@ -938,7 +901,14 @@ export type Subscription_RootUsers_AggregateArgs = {
 
 
 export type Subscription_RootUsers_By_PkArgs = {
-  id: Scalars['Int'];
+  id: Scalars['uuid'];
+};
+
+
+export type Subscription_RootUsers_StreamArgs = {
+  batch_size: Scalars['Int'];
+  cursor: Array<InputMaybe<Users_Stream_Cursor_Input>>;
+  where?: InputMaybe<Users_Bool_Exp>;
 };
 
 /** Boolean expression to compare columns of type "timestamptz". All fields are combined with logical 'AND'. */
@@ -996,7 +966,7 @@ export type Tokens_Bool_Exp = {
 
 /** unique or primary key constraints on table "tokens" */
 export enum Tokens_Constraint {
-  /** unique or primary key constraint */
+  /** unique or primary key constraint on columns "token" */
   TokensPkey = 'tokens_pkey'
 }
 
@@ -1032,7 +1002,7 @@ export type Tokens_Mutation_Response = {
   returning: Array<Tokens>;
 };
 
-/** on conflict condition type for table "tokens" */
+/** on_conflict condition type for table "tokens" */
 export type Tokens_On_Conflict = {
   constraint: Tokens_Constraint;
   update_columns?: Array<Tokens_Update_Column>;
@@ -1068,6 +1038,21 @@ export type Tokens_Set_Input = {
   token?: InputMaybe<Scalars['String']>;
 };
 
+/** Streaming cursor of the table "tokens" */
+export type Tokens_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Tokens_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type Tokens_Stream_Cursor_Value_Input = {
+  email?: InputMaybe<Scalars['String']>;
+  expires?: InputMaybe<Scalars['timestamptz']>;
+  token?: InputMaybe<Scalars['String']>;
+};
+
 /** update columns of table "tokens" */
 export enum Tokens_Update_Column {
   /** column name */
@@ -1078,13 +1063,19 @@ export enum Tokens_Update_Column {
   Token = 'token'
 }
 
+export type Tokens_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Tokens_Set_Input>;
+  where: Tokens_Bool_Exp;
+};
+
 /** columns and relationships of "users" */
 export type Users = {
   __typename?: 'users';
   email: Scalars['String'];
-  emailVerified?: Maybe<Scalars['timestamptz']>;
-  id: Scalars['Int'];
-  name: Scalars['String'];
+  emailVerified: Scalars['timestamptz'];
+  id: Scalars['uuid'];
+  name?: Maybe<Scalars['String']>;
 };
 
 /** aggregated selection of "users" */
@@ -1097,17 +1088,9 @@ export type Users_Aggregate = {
 /** aggregate fields of "users" */
 export type Users_Aggregate_Fields = {
   __typename?: 'users_aggregate_fields';
-  avg?: Maybe<Users_Avg_Fields>;
   count: Scalars['Int'];
   max?: Maybe<Users_Max_Fields>;
   min?: Maybe<Users_Min_Fields>;
-  stddev?: Maybe<Users_Stddev_Fields>;
-  stddev_pop?: Maybe<Users_Stddev_Pop_Fields>;
-  stddev_samp?: Maybe<Users_Stddev_Samp_Fields>;
-  sum?: Maybe<Users_Sum_Fields>;
-  var_pop?: Maybe<Users_Var_Pop_Fields>;
-  var_samp?: Maybe<Users_Var_Samp_Fields>;
-  variance?: Maybe<Users_Variance_Fields>;
 };
 
 
@@ -1117,12 +1100,6 @@ export type Users_Aggregate_FieldsCountArgs = {
   distinct?: InputMaybe<Scalars['Boolean']>;
 };
 
-/** aggregate avg on columns */
-export type Users_Avg_Fields = {
-  __typename?: 'users_avg_fields';
-  id?: Maybe<Scalars['Float']>;
-};
-
 /** Boolean expression to filter rows from the table "users". All fields are combined with a logical 'AND'. */
 export type Users_Bool_Exp = {
   _and?: InputMaybe<Array<Users_Bool_Exp>>;
@@ -1130,28 +1107,21 @@ export type Users_Bool_Exp = {
   _or?: InputMaybe<Array<Users_Bool_Exp>>;
   email?: InputMaybe<String_Comparison_Exp>;
   emailVerified?: InputMaybe<Timestamptz_Comparison_Exp>;
-  id?: InputMaybe<Int_Comparison_Exp>;
+  id?: InputMaybe<Uuid_Comparison_Exp>;
   name?: InputMaybe<String_Comparison_Exp>;
 };
 
 /** unique or primary key constraints on table "users" */
 export enum Users_Constraint {
-  /** unique or primary key constraint */
-  UsersEmailKey = 'users_email_key',
-  /** unique or primary key constraint */
+  /** unique or primary key constraint on columns "id" */
   UsersPkey = 'users_pkey'
 }
-
-/** input type for incrementing numeric columns in table "users" */
-export type Users_Inc_Input = {
-  id?: InputMaybe<Scalars['Int']>;
-};
 
 /** input type for inserting data into table "users" */
 export type Users_Insert_Input = {
   email?: InputMaybe<Scalars['String']>;
   emailVerified?: InputMaybe<Scalars['timestamptz']>;
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['uuid']>;
   name?: InputMaybe<Scalars['String']>;
 };
 
@@ -1160,7 +1130,7 @@ export type Users_Max_Fields = {
   __typename?: 'users_max_fields';
   email?: Maybe<Scalars['String']>;
   emailVerified?: Maybe<Scalars['timestamptz']>;
-  id?: Maybe<Scalars['Int']>;
+  id?: Maybe<Scalars['uuid']>;
   name?: Maybe<Scalars['String']>;
 };
 
@@ -1169,7 +1139,7 @@ export type Users_Min_Fields = {
   __typename?: 'users_min_fields';
   email?: Maybe<Scalars['String']>;
   emailVerified?: Maybe<Scalars['timestamptz']>;
-  id?: Maybe<Scalars['Int']>;
+  id?: Maybe<Scalars['uuid']>;
   name?: Maybe<Scalars['String']>;
 };
 
@@ -1185,11 +1155,11 @@ export type Users_Mutation_Response = {
 /** input type for inserting object relation for remote table "users" */
 export type Users_Obj_Rel_Insert_Input = {
   data: Users_Insert_Input;
-  /** on conflict condition */
+  /** upsert condition */
   on_conflict?: InputMaybe<Users_On_Conflict>;
 };
 
-/** on conflict condition type for table "users" */
+/** on_conflict condition type for table "users" */
 export type Users_On_Conflict = {
   constraint: Users_Constraint;
   update_columns?: Array<Users_Update_Column>;
@@ -1206,7 +1176,7 @@ export type Users_Order_By = {
 
 /** primary key columns input for table: users */
 export type Users_Pk_Columns_Input = {
-  id: Scalars['Int'];
+  id: Scalars['uuid'];
 };
 
 /** select columns of table "users" */
@@ -1225,32 +1195,24 @@ export enum Users_Select_Column {
 export type Users_Set_Input = {
   email?: InputMaybe<Scalars['String']>;
   emailVerified?: InputMaybe<Scalars['timestamptz']>;
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['uuid']>;
   name?: InputMaybe<Scalars['String']>;
 };
 
-/** aggregate stddev on columns */
-export type Users_Stddev_Fields = {
-  __typename?: 'users_stddev_fields';
-  id?: Maybe<Scalars['Float']>;
+/** Streaming cursor of the table "users" */
+export type Users_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: Users_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
 };
 
-/** aggregate stddev_pop on columns */
-export type Users_Stddev_Pop_Fields = {
-  __typename?: 'users_stddev_pop_fields';
-  id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate stddev_samp on columns */
-export type Users_Stddev_Samp_Fields = {
-  __typename?: 'users_stddev_samp_fields';
-  id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate sum on columns */
-export type Users_Sum_Fields = {
-  __typename?: 'users_sum_fields';
-  id?: Maybe<Scalars['Int']>;
+/** Initial value of the column from where the streaming should start */
+export type Users_Stream_Cursor_Value_Input = {
+  email?: InputMaybe<Scalars['String']>;
+  emailVerified?: InputMaybe<Scalars['timestamptz']>;
+  id?: InputMaybe<Scalars['uuid']>;
+  name?: InputMaybe<Scalars['String']>;
 };
 
 /** update columns of table "users" */
@@ -1265,22 +1227,23 @@ export enum Users_Update_Column {
   Name = 'name'
 }
 
-/** aggregate var_pop on columns */
-export type Users_Var_Pop_Fields = {
-  __typename?: 'users_var_pop_fields';
-  id?: Maybe<Scalars['Float']>;
+export type Users_Updates = {
+  /** sets the columns of the filtered rows to the given values */
+  _set?: InputMaybe<Users_Set_Input>;
+  where: Users_Bool_Exp;
 };
 
-/** aggregate var_samp on columns */
-export type Users_Var_Samp_Fields = {
-  __typename?: 'users_var_samp_fields';
-  id?: Maybe<Scalars['Float']>;
-};
-
-/** aggregate variance on columns */
-export type Users_Variance_Fields = {
-  __typename?: 'users_variance_fields';
-  id?: Maybe<Scalars['Float']>;
+/** Boolean expression to compare columns of type "uuid". All fields are combined with logical 'AND'. */
+export type Uuid_Comparison_Exp = {
+  _eq?: InputMaybe<Scalars['uuid']>;
+  _gt?: InputMaybe<Scalars['uuid']>;
+  _gte?: InputMaybe<Scalars['uuid']>;
+  _in?: InputMaybe<Array<Scalars['uuid']>>;
+  _is_null?: InputMaybe<Scalars['Boolean']>;
+  _lt?: InputMaybe<Scalars['uuid']>;
+  _lte?: InputMaybe<Scalars['uuid']>;
+  _neq?: InputMaybe<Scalars['uuid']>;
+  _nin?: InputMaybe<Array<Scalars['uuid']>>;
 };
 
 export type UserByEmailQueryVariables = Exact<{
@@ -1288,7 +1251,7 @@ export type UserByEmailQueryVariables = Exact<{
 }>;
 
 
-export type UserByEmailQuery = { __typename?: 'query_root', users: Array<{ __typename?: 'users', id: number, name: string, email: string, emailVerified?: any | null }> };
+export type UserByEmailQuery = { __typename?: 'query_root', users: Array<{ __typename?: 'users', id: any, name?: string | null, email: string, emailVerified: any }> };
 
 export type CreateVerificationTokenMutationVariables = Exact<{
   expires: Scalars['timestamptz'];
@@ -1308,51 +1271,51 @@ export type UseVerificationTokenMutation = { __typename?: 'mutation_root', delet
 
 export type VerifyEmailByEmailMutationVariables = Exact<{
   email?: InputMaybe<Scalars['String']>;
-  id?: InputMaybe<Scalars['Int']>;
+  id?: InputMaybe<Scalars['uuid']>;
 }>;
 
 
-export type VerifyEmailByEmailMutation = { __typename?: 'mutation_root', update_users?: { __typename?: 'users_mutation_response', returning: Array<{ __typename?: 'users', emailVerified?: any | null, id: number, name: string, email: string }> } | null };
+export type VerifyEmailByEmailMutation = { __typename?: 'mutation_root', update_users?: { __typename?: 'users_mutation_response', returning: Array<{ __typename?: 'users', emailVerified: any, id: any, name?: string | null, email: string }> } | null };
 
-export type AdapterUserFragment = { __typename?: 'users', email: string, emailVerified?: any | null, id: number, name: string };
+export type AdapterUserFragment = { __typename?: 'users', email: string, emailVerified: any, id: any, name?: string | null };
 
 export type GetSessionAndUserQueryVariables = Exact<{
   sessionToken: Scalars['String'];
 }>;
 
 
-export type GetSessionAndUserQuery = { __typename?: 'query_root', sessions_by_pk?: { __typename?: 'sessions', expires: any, id: number, user: { __typename?: 'users', email: string, emailVerified?: any | null, id: number, name: string } } | null };
+export type GetSessionAndUserQuery = { __typename?: 'query_root', sessions_by_pk?: { __typename?: 'sessions', expires: any, id: any, user: { __typename?: 'users', email: string, emailVerified: any, id: any, name?: string | null } } | null };
 
 export type DeleteSessionMutationVariables = Exact<{
   sessionToken: Scalars['String'];
 }>;
 
 
-export type DeleteSessionMutation = { __typename?: 'mutation_root', delete_sessions_by_pk?: { __typename?: 'sessions', expires: any, id: number, userId: number } | null };
+export type DeleteSessionMutation = { __typename?: 'mutation_root', delete_sessions_by_pk?: { __typename?: 'sessions', expires: any, id: any, userId: any } | null };
 
 export type CreateSessionMutationVariables = Exact<{
   sessionToken: Scalars['String'];
-  userId: Scalars['Int'];
+  userId: Scalars['uuid'];
   expires: Scalars['timestamptz'];
 }>;
 
 
-export type CreateSessionMutation = { __typename?: 'mutation_root', insert_sessions_one?: { __typename?: 'sessions', id: number } | null };
+export type CreateSessionMutation = { __typename?: 'mutation_root', insert_sessions_one?: { __typename?: 'sessions', id: any } | null };
 
 export type CreateUserMutationVariables = Exact<{
   email: Scalars['String'];
-  name: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
 }>;
 
 
-export type CreateUserMutation = { __typename?: 'mutation_root', insert_users_one?: { __typename?: 'users', id: number } | null };
+export type CreateUserMutation = { __typename?: 'mutation_root', insert_users_one?: { __typename?: 'users', id: any } | null };
 
 export type GetUserQueryVariables = Exact<{
-  id: Scalars['Int'];
+  id: Scalars['uuid'];
 }>;
 
 
-export type GetUserQuery = { __typename?: 'query_root', users_by_pk?: { __typename?: 'users', email: string, emailVerified?: any | null, id: number, name: string } | null };
+export type GetUserQuery = { __typename?: 'query_root', users_by_pk?: { __typename?: 'users', email: string, emailVerified: any, id: any, name?: string | null } | null };
 
 export type GetUserByAccountQueryVariables = Exact<{
   provider: Scalars['String'];
@@ -1360,23 +1323,23 @@ export type GetUserByAccountQueryVariables = Exact<{
 }>;
 
 
-export type GetUserByAccountQuery = { __typename?: 'query_root', providers_by_pk?: { __typename?: 'providers', user: { __typename?: 'users', email: string, emailVerified?: any | null, id: number, name: string } } | null };
+export type GetUserByAccountQuery = { __typename?: 'query_root', providers_by_pk?: { __typename?: 'providers', user: { __typename?: 'users', email: string, emailVerified: any, id: any, name?: string | null } } | null };
 
 export type LinkAccountMutationVariables = Exact<{
   provider: Scalars['String'];
   providerAccountId: Scalars['String'];
-  userId: Scalars['Int'];
+  userId: Scalars['uuid'];
 }>;
 
 
-export type LinkAccountMutation = { __typename?: 'mutation_root', insert_providers_one?: { __typename?: 'providers', userId: number } | null };
+export type LinkAccountMutation = { __typename?: 'mutation_root', insert_providers_one?: { __typename?: 'providers', userId: any } | null };
 
 export type UpdateSessionQueryVariables = Exact<{
   sessionToken: Scalars['String'];
 }>;
 
 
-export type UpdateSessionQuery = { __typename?: 'query_root', sessions_by_pk?: { __typename?: 'sessions', expires: any, id: number, sessionToken: string, userId: number } | null };
+export type UpdateSessionQuery = { __typename?: 'query_root', sessions_by_pk?: { __typename?: 'sessions', expires: any, id: any, sessionToken: string, userId: any } | null };
 
 export type UserCountSubscriptionVariables = Exact<{ [key: string]: never; }>;
 
@@ -1501,7 +1464,7 @@ export type UseVerificationTokenMutationHookResult = ReturnType<typeof useUseVer
 export type UseVerificationTokenMutationResult = Apollo.MutationResult<UseVerificationTokenMutation>;
 export type UseVerificationTokenMutationOptions = Apollo.BaseMutationOptions<UseVerificationTokenMutation, UseVerificationTokenMutationVariables>;
 export const VerifyEmailByEmailDocument = gql`
-    mutation VerifyEmailByEmail($email: String = "", $id: Int = 0) {
+    mutation VerifyEmailByEmail($email: String = "", $id: uuid = "") {
   update_users(
     where: {_or: [{email: {_eq: $email}}, {id: {_eq: $id}}]}
     _set: {emailVerified: "now()"}
@@ -1617,7 +1580,7 @@ export type DeleteSessionMutationHookResult = ReturnType<typeof useDeleteSession
 export type DeleteSessionMutationResult = Apollo.MutationResult<DeleteSessionMutation>;
 export type DeleteSessionMutationOptions = Apollo.BaseMutationOptions<DeleteSessionMutation, DeleteSessionMutationVariables>;
 export const CreateSessionDocument = gql`
-    mutation CreateSession($sessionToken: String!, $userId: Int!, $expires: timestamptz!) {
+    mutation CreateSession($sessionToken: String!, $userId: uuid!, $expires: timestamptz!) {
   insert_sessions_one(
     object: {sessionToken: $sessionToken, expires: $expires, userId: $userId}
   ) {
@@ -1654,7 +1617,7 @@ export type CreateSessionMutationHookResult = ReturnType<typeof useCreateSession
 export type CreateSessionMutationResult = Apollo.MutationResult<CreateSessionMutation>;
 export type CreateSessionMutationOptions = Apollo.BaseMutationOptions<CreateSessionMutation, CreateSessionMutationVariables>;
 export const CreateUserDocument = gql`
-    mutation CreateUser($email: String!, $name: String!) {
+    mutation CreateUser($email: String!, $name: String) {
   insert_users_one(object: {email: $email, name: $name}) {
     id
   }
@@ -1688,7 +1651,7 @@ export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutati
 export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
 export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
 export const GetUserDocument = gql`
-    query GetUser($id: Int!) {
+    query GetUser($id: uuid!) {
   users_by_pk(id: $id) {
     ...AdapterUser
   }
@@ -1761,7 +1724,7 @@ export type GetUserByAccountQueryHookResult = ReturnType<typeof useGetUserByAcco
 export type GetUserByAccountLazyQueryHookResult = ReturnType<typeof useGetUserByAccountLazyQuery>;
 export type GetUserByAccountQueryResult = Apollo.QueryResult<GetUserByAccountQuery, GetUserByAccountQueryVariables>;
 export const LinkAccountDocument = gql`
-    mutation LinkAccount($provider: String!, $providerAccountId: String!, $userId: Int!) {
+    mutation LinkAccount($provider: String!, $providerAccountId: String!, $userId: uuid!) {
   insert_providers_one(
     object: {provider: $provider, providerAccountId: $providerAccountId, userId: $userId}
     on_conflict: {constraint: providers_pkey, update_columns: providerAccountId}

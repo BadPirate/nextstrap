@@ -9,7 +9,7 @@ if (!EMAIL_SERVER || !EMAIL_FROM) {
   throw Error('EMAIL_SERVER and EMAIL_FROM must be set in order to use EmailProvider')
 }
 
-export default NextAuth({
+export const authOptions = {
   // Configure one or more authentication providers
   providers: [
     EmailProvider({
@@ -19,4 +19,6 @@ export default NextAuth({
   ],
   adapter: HasuraAdapter(),
   callbacks: HasuraCallbacks,
-})
+}
+
+export default NextAuth(authOptions)

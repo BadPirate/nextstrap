@@ -1,28 +1,30 @@
-import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client'
+import {
+  ApolloClient, InMemoryCache,
+} from '@apollo/client'
 import { HasuraToken } from '../hasura/HasuraToken'
+import HasuraLink from './HasuraLink'
 
-const { EMAIL_FROM } = process.env
-
-if (!EMAIL_FROM) {
-  throw Error('EMAIL_FROM must be set in .env for use as Server User')
-}
+const { SERVER_EMAIL, SERVER_USER_ID } = process.env
 
 const SERVER_USER_TOKEN = HasuraToken(
-  EMAIL_FROM,
-  '1',
+  SERVER_EMAIL ?? '',
+  SERVER_USER_ID ?? '',
   'Server Client',
   'server',
   (24 * 60 * 60 * 30), /* 30 days */
 )
 
-const ApolloServerClient = () => new ApolloClient({
-  link: new HttpLink({
-    uri: process.env.NEXT_PUBLIC_HASURA_ENDPOINT,
-    headers: {
-      Authorization: `Bearer ${SERVER_USER_TOKEN}`,
-    },
-  }),
-  cache: new InMemoryCache(),
-})
-
+const ApolloServerClient = () => {
+  if (!SERVER_EMAIL || !SERVER_USER_ID) {
+    throw Error('SERVER_EMAIL and SERVER_USER_ID must be set in .env for use as Server User')
+  }
+  return new ApolloClient({
+    link: HasuraLink({
+      headers: {
+        Authorization: `Bearer ${SERVER_USER_TOKEN}`,
+      },
+    }),
+    cache: new InMemoryCache(),
+  })
+}
 export default ApolloServerClient

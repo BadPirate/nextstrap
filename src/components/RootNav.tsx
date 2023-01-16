@@ -2,7 +2,6 @@ import { signIn, signOut, useSession } from 'next-auth/react'
 import {
   Navbar, Container, NavDropdown, Button,
 } from 'react-bootstrap'
-import UserCount from './UserCount'
 
 const RootNav = ({ children } : {children : JSX.Element}) => {
   const user = useSession().data?.user
@@ -14,9 +13,6 @@ const RootNav = ({ children } : {children : JSX.Element}) => {
         </Navbar.Brand>
         <Navbar.Text>
           {`v${process.env.NEXT_PUBLIC_APP_VERSION}`}
-        </Navbar.Text>
-        <Navbar.Text className="ms-3">
-          <UserCount />
         </Navbar.Text>
         {
           user ? (

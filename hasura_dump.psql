@@ -18,13 +18,11 @@ SET escape_string_warning = off;
 SET row_security = off;
 
 --
--- Name: public; Type: SCHEMA; Schema: -; Owner: badpirate
+-- Name: public; Type: SCHEMA; Schema: -
 --
 
 -- *not* creating schema, since initdb creates it
 
-
-ALTER SCHEMA public OWNER TO badpirate;
 
 --
 -- Name: pgcrypto; Type: EXTENSION; Schema: -; Owner: -
@@ -45,7 +43,7 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- Name: providers; Type: TABLE; Schema: public; Owner: badpirate
+-- Name: providers; Type: TABLE; Schema: public
 --
 
 CREATE TABLE public.providers (
@@ -55,10 +53,9 @@ CREATE TABLE public.providers (
 );
 
 
-ALTER TABLE public.providers OWNER TO badpirate;
 
 --
--- Name: sessions; Type: TABLE; Schema: public; Owner: badpirate
+-- Name: sessions; Type: TABLE; Schema: public
 --
 
 CREATE TABLE public.sessions (
@@ -69,10 +66,8 @@ CREATE TABLE public.sessions (
 );
 
 
-ALTER TABLE public.sessions OWNER TO badpirate;
-
 --
--- Name: tokens; Type: TABLE; Schema: public; Owner: badpirate
+-- Name: tokens; Type: TABLE; Schema: public
 --
 
 CREATE TABLE public.tokens (
@@ -82,10 +77,8 @@ CREATE TABLE public.tokens (
 );
 
 
-ALTER TABLE public.tokens OWNER TO badpirate;
-
 --
--- Name: users; Type: TABLE; Schema: public; Owner: badpirate
+-- Name: users; Type: TABLE; Schema: public
 --
 
 CREATE TABLE public.users (
@@ -96,10 +89,8 @@ CREATE TABLE public.users (
 );
 
 
-ALTER TABLE public.users OWNER TO badpirate;
-
 --
--- Data for Name: providers; Type: TABLE DATA; Schema: public; Owner: badpirate
+-- Data for Name: providers; Type: TABLE DATA; Schema: public
 --
 
 COPY public.providers ("userId", provider, "providerAccountId") FROM stdin;
@@ -107,7 +98,7 @@ COPY public.providers ("userId", provider, "providerAccountId") FROM stdin;
 
 
 --
--- Data for Name: sessions; Type: TABLE DATA; Schema: public; Owner: badpirate
+-- Data for Name: sessions; Type: TABLE DATA; Schema: public
 --
 
 COPY public.sessions (id, "sessionToken", expires, "userId") FROM stdin;
@@ -116,7 +107,7 @@ COPY public.sessions (id, "sessionToken", expires, "userId") FROM stdin;
 
 
 --
--- Data for Name: tokens; Type: TABLE DATA; Schema: public; Owner: badpirate
+-- Data for Name: tokens; Type: TABLE DATA; Schema: public
 --
 
 COPY public.tokens (token, email, expires) FROM stdin;
@@ -124,16 +115,7 @@ COPY public.tokens (token, email, expires) FROM stdin;
 
 
 --
--- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: badpirate
---
-
-COPY public.users (id, email, name, "emailVerified") FROM stdin;
-4641ddde-6089-4b43-a839-3e926528b72b	tahoe@lohman.me	\N	\N
-\.
-
-
---
--- Name: providers providers_pkey; Type: CONSTRAINT; Schema: public; Owner: badpirate
+-- Name: providers providers_pkey; Type: CONSTRAINT; Schema: public
 --
 
 ALTER TABLE ONLY public.providers
@@ -141,7 +123,7 @@ ALTER TABLE ONLY public.providers
 
 
 --
--- Name: sessions sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: badpirate
+-- Name: sessions sessions_pkey; Type: CONSTRAINT; Schema: public
 --
 
 ALTER TABLE ONLY public.sessions
@@ -149,7 +131,7 @@ ALTER TABLE ONLY public.sessions
 
 
 --
--- Name: tokens tokens_pkey; Type: CONSTRAINT; Schema: public; Owner: badpirate
+-- Name: tokens tokens_pkey; Type: CONSTRAINT; Schema: public
 --
 
 ALTER TABLE ONLY public.tokens
@@ -157,7 +139,7 @@ ALTER TABLE ONLY public.tokens
 
 
 --
--- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: badpirate
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public
 --
 
 ALTER TABLE ONLY public.users
@@ -165,7 +147,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: providers providers_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: badpirate
+-- Name: providers providers_userId_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
 ALTER TABLE ONLY public.providers
@@ -173,7 +155,7 @@ ALTER TABLE ONLY public.providers
 
 
 --
--- Name: sessions sessions_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: badpirate
+-- Name: sessions sessions_userId_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
 ALTER TABLE ONLY public.sessions
@@ -181,7 +163,7 @@ ALTER TABLE ONLY public.sessions
 
 
 --
--- Name: SCHEMA public; Type: ACL; Schema: -; Owner: badpirate
+-- Name: SCHEMA public; Type: ACL; Schema: -
 --
 
 REVOKE USAGE ON SCHEMA public FROM PUBLIC;

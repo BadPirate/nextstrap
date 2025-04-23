@@ -52,7 +52,6 @@
     "typescript": "^5.8.3",
     "prisma": "^6.6.0",
     "wait-on": "^7.0.1",
-    "better-sqlite3": "^8.0.0",
     "smtp-tester": "^2.0.1"
   },
   "resolutions": {

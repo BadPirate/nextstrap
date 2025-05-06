@@ -24,8 +24,19 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'yarn' # Cache yarn dependencies
 
+    - name: Cache Playwright browsers
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/ms-playwright
+        key: playwright-browsers-${{ runner.os }}-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}
+        restore-keys: |
+          playwright-browsers-${{ runner.os }}-
+
     - name: Install dependencies
       run: yarn install --frozen-lockfile
+
+    - name: Install Playwright browsers (if needed)
+      run: npx playwright install --with-deps
 
     - name: Run linters
       run: yarn lint # Ensure code style and quality

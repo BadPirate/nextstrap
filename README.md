@@ -161,6 +161,40 @@ yarn dev
 - Run `yarn db:generate` to set up your database.
 - Start developing your app!
 
+## Development Process (2025+)
+
+- **Single Source of Truth for Schema:**
+
+  - All Prisma models and DB schema are defined in `prisma/schema.prisma`.
+  - To update type definitions and Prisma client, run:
+    ```bash
+    yarn generate:schema
+    # or
+    yarn db:generate
+    ```
+  - The devcontainer and CI will ensure the client is always up to date.
+
+- **Database Setup:**
+
+  - Test and dev databases are managed FULL-AUTO in the devcontainer.
+  - Schema is pushed and client generated on container creation; tests only clean data.
+  - No manual DB resets needed for routine development/testing.
+
+- **Testing, Linting, and Type Checking:**
+
+  - All tests (unit and E2E), lint, and typecheck run automatically on commit and in CI.
+  - Playwright browsers and Prisma client are pre-installed in the devcontainer.
+  - To run all checks locally:
+    ```bash
+    yarn lint
+    yarn test
+    yarn test:e2e
+    ```
+
+- **Devcontainer Environment:**
+  - Includes up-to-date Node.js, npm, Git (built from source if needed), and ESLint pre-installed and on the PATH.
+  - No need to install these tools manually.
+
 ## Copilot & AI Agent Usage in Dev Container
 
 This project is pre-configured for GitHub Copilot and agent features in VS Code. To use Copilot and access advanced AI features:
@@ -188,6 +222,16 @@ This project is pre-configured for GitHub Copilot and agent features in VS Code.
 4. **Workspace AI/Agent Features**
    - The workspace is set up to enable Copilot chat, agent, and code search features by default (see `.vscode/settings.json`).
    - No additional configuration is needed for most users.
+
+## AI & Copilot Process (FULL-AUTO)
+
+- This project is designed for seamless use with GitHub Copilot and AI agents.
+- Copilot and agent features are enabled by default in the devcontainer.
+- **FULL-AUTO:**
+  - When you request FULL-AUTO, the AI agent will resolve issues, run all tests/lint, and commit changes without further prompts.
+  - The agent will not ask you to run commands or make edits it can perform itself.
+  - If blocked, the agent will clearly state what is needed from you.
+- See `.github/copilot‑instructions.md` for detailed Copilot/AI agent usage and expectations.
 
 For more help, see the [GitHub Copilot documentation](https://docs.github.com/en/copilot).
 

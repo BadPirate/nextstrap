@@ -3,52 +3,49 @@ import dotenv from 'dotenv'
 // eslint-disable-next-line import/extensions
 import packageJson from '../../package.json'
 
-// Only load dotenv in server environment
+// Required environment variables
+const required = {
+  DATABASE_URL: '',
+}
+
+const NODE_ENV = process.env.NODE_ENV ?? 'development'
+
+// Always load dotenv, preferring .env.development if NODE_ENV is development
 if (typeof window === 'undefined') {
-  dotenv.config()
-}
+  dotenv.config({ path: `.env.${NODE_ENV}` })
+  dotenv.config({ path: '.env.local' })
 
-const requireEnv = <T extends Record<string, string | undefined>, U = string>(
-  values: T,
-  type?: (value: string) => U,
-): { [K in keyof T]: U } => {
-  const result: Partial<{ [K in keyof T]: U }> = {}
-
-  for (const key in values) {
-    const value = process.env[key] || values[key]
+  for (const key in required) {
+    const envKey = key as keyof typeof required
+    const value = process.env[envKey]
     if (!value) {
-      throw new Error(`Missing required environment variable: ${key}`)
+      throw `Missing required environment variable: ${envKey}`
     }
-    const typedValue = type ? type(value) : (value as unknown as U)
-    if (type) {
-      const convertedValue = type(value)
-      if (typeof typedValue !== typeof convertedValue) {
-        throw new Error(`Environment variable ${key} is not of the expected type`)
-      }
-    }
-    result[key] = typedValue
+    required[envKey] = value
   }
-
-  return result as { [K in keyof T]: U }
 }
-
-const env = requireEnv({
-  NODE_ENV: 'development',
-  DATABASE_URL: 'postgres://postgres:postgres@db:5432/nextstrap',
-})
 
 // Optional environment variables with defaults
-const optionalEnv = {
-  PORT: process.env.PORT,
-  CI: process.env.CI === 'true',
+const env = {
+  PORT: '3000',
+  CI: 'false',
+}
+
+for (const key in env) {
+  const envKey = key as keyof typeof env
+  const value = process.env[envKey]
+  if (value) {
+    env[envKey] = value
+  }
 }
 
 // Use values directly from package.json
 const config = {
+  NODE_ENV,
   NEXT_PUBLIC_APP_NAME: packageJson.name,
   NEXT_PUBLIC_APP_VERSION: packageJson.version,
   ...env,
-  ...optionalEnv,
+  ...required,
 }
 
 export default config

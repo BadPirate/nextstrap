@@ -3,7 +3,7 @@
   "dockerComposeFile": ["docker-compose.yml"],
   "service": "devcontainer",
   "workspaceFolder": "/workspace",
-  "postCreateCommand": "yarn install && yarn prisma generate && bash scripts/init-db.sh",
+  "postCreateCommand": "yarn install && yarn prisma generate && sh scripts/init-db.sh",
   "forwardPorts": [3000],
   "features": {},
   "customizations": {

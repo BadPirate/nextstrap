@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 const { execSync } = require('child_process');
 const path = require('path');
+const fs = require('fs');
+
 
 // Export an async function as required by Jest globalSetup
 module.exports = async () => {
@@ -19,7 +21,7 @@ module.exports = async () => {
     'schema.prisma',
   );
 
-  if (!require('fs').existsSync(schemaPath)) {
+  if (!fs.existsSync(schemaPath)) {
     console.error(`Error: Prisma schema not found at ${schemaPath}`);
     console.log('Please run `yarn build:prisma-schemas` first.');
     process.exit(1);

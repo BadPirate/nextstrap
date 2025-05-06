@@ -10,7 +10,6 @@ const provider = 'postgresql';
 const schemaPath = path.resolve(
   process.cwd(),
   'prisma',
-  'generated',
   `${provider}.prisma`,
 );
 

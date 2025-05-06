@@ -16,8 +16,7 @@ module.exports = async () => {
   const schemaPath = path.resolve(
     process.cwd(),
     'prisma',
-    'generated',
-    'postgresql.prisma',
+    'schema.prisma',
   );
 
   if (!require('fs').existsSync(schemaPath)) {

@@ -42,3 +42,5 @@
 
    Be aware that you are in a dev container, and that you are expected to be able to modify files in the container
    in the case that there are features you are blocked from in the container, I can reload it for you.
+
+7. Commit messages should include summary details of all changes made in the commit.

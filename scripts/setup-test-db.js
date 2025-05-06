@@ -30,18 +30,12 @@ module.exports = async () => {
   const env = { ...process.env, DATABASE_URL: databaseUrl };
 
   try {
-    // Reset the test database (drops all data)
-    console.log(`Resetting and pushing Prisma schema from ${schemaPath} to ${databaseUrl}...`);
-    execSync(`npx prisma db push --schema=${schemaPath} --force-reset --accept-data-loss`, { stdio: 'inherit', env });
-    console.log('Database schema pushed successfully.');
-
-    // Generate Prisma client for the test database
-    console.log('Generating Prisma client...');
-    execSync(`npx prisma generate --schema=${schemaPath}`, { stdio: 'inherit', env });
-    console.log('Prisma client generated successfully.');
-
+    // Clean all tables in the test database without pushing schema or generating client
+    console.log('Cleaning test database tables...');
+    execSync(`npx prisma db execute --schema=${schemaPath} --file scripts/sql/truncate_all_tables.sql`, { stdio: 'inherit', env });
+    console.log('Test database tables cleaned.');
   } catch (error) {
-    console.error('Failed to set up test database:', error);
+    console.error('Failed to clean test database:', error);
     process.exit(1);
   }
 

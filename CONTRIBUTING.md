@@ -19,6 +19,12 @@ This project follows the [Contributor Covenant Code of Conduct](https://www.cont
 
 7. Start the development server: `yarn dev`
 
+**Development in Dev Container**
+
+- This project is designed for use in a VS Code dev container, which comes pre-installed with up-to-date versions of Git, Node.js, npm, and ESLint.
+- To use the dev container, open the project in VS Code and select "Reopen in Container" when prompted, or use the Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P`) and search for "Dev Containers: Reopen in Container".
+- The dev container is pre-configured for GitHub Copilot and AI agent features. See the README for details.
+
 ## Development Guidelines
 
 - **Frameworks & Languages**: Next.js with TypeScript.
@@ -35,7 +41,7 @@ This project follows the [Contributor Covenant Code of Conduct](https://www.cont
 - **Database Changes**:
   - Edit models in `prisma/models.prisma`
   - Run `yarn build:prisma-schemas` to regenerate schemas
-  - Run `yarn build:dev-db` to update your local database
+  - Run `yarn build:dev-db` to update your local PostgreSQL database
 - **Testing**:
   - Unit tests: `yarn test`
   - End-to-end tests: `yarn test:e2e`

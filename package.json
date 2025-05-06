@@ -1,6 +1,6 @@
 {
   "name": "nextstrap",
-  "version": "2025.1.31",
+  "version": "0.1.0",
   "private": true,
   "license": "MIT",
   "scripts": {
@@ -11,9 +11,9 @@
     "test:e2e": "yarn playwright test",
     "typecheck": "tsc --noEmit",
     "lint": "echo '\n=== RUNNING PRETTIER ===\n' && prettier --write \"**/*.{js,jsx,ts,tsx,json,md,css,scss,html}\" && echo '\n=== RUNNING ESLINT ===\n' && eslint -c .eslintrc.js . --ext .js,.jsx,.ts,.tsx --fix --max-warnings=0 && echo '\n=== RUNNING TYPESCRIPT TYPE CHECK ===\n' && tsc --noEmit || (echo '\n⚠️  Linting or type-checking failed. Please fix errors before committing.\n' && exit 1)",
-    "build:dev-db": "yarn build:prisma-schemas && node scripts/db-clean.js",
-    "build:prisma-schemas": "node scripts/build-schemas.js",
-    "prepare": "husky"
+    "prepare": "husky",
+    "db:generate": "npx prisma generate",
+    "generate:schema": "node scripts/build-schemas.js && bash scripts/init-db.sh"
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
@@ -24,8 +24,7 @@
     "pg": "^8.11.1",
     "react": "^18.2.0",
     "react-bootstrap": "^2.8.0",
-    "react-dom": "^18.2.0",
-    "sqlite3": "^5.1.7"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.52.0",

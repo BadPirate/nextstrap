@@ -34,7 +34,7 @@ const requireEnv = <T extends Record<string, string | undefined>, U = string>(
 
 const env = requireEnv({
   NODE_ENV: 'development',
-  DATABASE_URL: 'file:./dev.db',
+  DATABASE_URL: 'postgres://postgres:postgres@db:5432/nextstrap',
 })
 
 // Optional environment variables with defaults

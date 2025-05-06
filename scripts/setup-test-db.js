@@ -1,56 +1,24 @@
 #!/usr/bin/env node
 const { execSync } = require('child_process');
-const fs = require('fs');
 const path = require('path');
+const fs = require('fs');
+
 
 // Export an async function as required by Jest globalSetup
 module.exports = async () => {
-  // Define the test database path
-  const dbPath = 'test.db';
-  const absDbPath = path.resolve(process.cwd(), dbPath);
-  const databaseUrl = 'file:' + absDbPath;
-
-  // Set environment variables for the test run
+  // Use a PostgreSQL test database URL for all test runs
+  // Always use the 'db' hostname for the devcontainer network
+  const defaultTestDbUrl = 'postgresql://postgres:postgres@db:5432/nextstrap_test';
+  const databaseUrl = process.env.TEST_DATABASE_URL || defaultTestDbUrl;
   process.env.DATABASE_URL = databaseUrl;
-  // Add other necessary test environment variables if needed
-  // process.env.SMTP_HOST = '0.0.0.0';
-  // process.env.SMTP_PORT = '1025';
-  // process.env.EMAIL_FROM = 'test@example.com';
-  // process.env.NEXTAUTH_URL = 'http://0.0.0.0:3000';
-  // process.env.NEXTAUTH_SECRET = 'test_secret';
 
-  console.log(`Setting up test database: ${dbPath}`);
+  console.log(`Setting up test database: ${databaseUrl}`);
 
-  // --- Add safety check ---
-  if (!absDbPath.endsWith('test.db')) {
-    console.error(`Safety check failed: Attempting to modify non-test database path: ${absDbPath}`);
-    process.exit(1);
-  }
-  // --- End safety check ---
-
-  // Remove existing test database files
-  try {
-    if (fs.existsSync(absDbPath)) {
-      fs.unlinkSync(absDbPath);
-      console.log(`Removed existing test database file: ${dbPath}`);
-    }
-    const journalPath = absDbPath + '-journal';
-    if (fs.existsSync(journalPath)) {
-      fs.unlinkSync(journalPath);
-      console.log(`Removed existing test database journal file: ${journalPath}`);
-    }
-  } catch (err) {
-    console.error('Error removing existing test database files:', err);
-    // Decide if you want to exit or continue
-  }
-
-  // Determine the correct schema path (assuming SQLite for tests)
-  const provider = 'sqlite';
+  // Determine the correct schema path
   const schemaPath = path.resolve(
     process.cwd(),
     'prisma',
-    'generated',
-    `${provider}.prisma`,
+    'schema.prisma',
   );
 
   if (!fs.existsSync(schemaPath)) {
@@ -63,19 +31,12 @@ module.exports = async () => {
   const env = { ...process.env, DATABASE_URL: databaseUrl };
 
   try {
-    // Push the schema to the database
-    console.log(`Pushing Prisma schema from ${schemaPath} to ${databaseUrl}...`);
-    // Use --accept-data-loss for non-interactive environments like CI/tests
-    execSync(`npx prisma db push --schema=${schemaPath} --force-reset --accept-data-loss`, { stdio: 'inherit', env });
-    console.log('Database schema pushed successfully.');
-
-    // Generate Prisma client for the test database
-    console.log(`Generating Prisma client for ${provider}...`);
-    execSync(`npx prisma generate --schema=${schemaPath}`, { stdio: 'inherit', env });
-    console.log('Prisma client generated successfully.');
-
+    // Clean all tables in the test database without pushing schema or generating client
+    console.log('Cleaning test database tables...');
+    execSync(`npx prisma db execute --schema=${schemaPath} --file scripts/sql/truncate_all_tables.sql`, { stdio: 'inherit', env });
+    console.log('Test database tables cleaned.');
   } catch (error) {
-    console.error('Failed to set up test database:', error);
+    console.error('Failed to clean test database:', error);
     process.exit(1);
   }
 

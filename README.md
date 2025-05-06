@@ -12,7 +12,7 @@ This project includes a comprehensive set of features designed to maintain high 
 
 - **Next.js**: React framework with server-side rendering and routing
 - **TypeScript**: With strict mode enabled for maximum type safety
-- **Prisma ORM**: Database management supporting both SQLite and PostgreSQL
+- **Prisma ORM**: Database management supporting PostgreSQL
 - **Bootstrap & React Bootstrap**: UI framework with Bootswatch themes
 
 ### Development & Quality Tools
@@ -25,8 +25,8 @@ This project includes a comprehensive set of features designed to maintain high 
 
 ### Database Features
 
-- **Custom Prisma Schema Generation**: Scripts for dynamic schema generation for multiple database providers
-- **Database Utilities**: Scripts for cleaning, rebuilding, and setting up test databases
+- **Prisma Schema Management**: Standardized schema for PostgreSQL only
+- **Database Utilities**: Scripts for cleaning, rebuilding, and setting up PostgreSQL test databases
 
 ### Testing Suite
 
@@ -87,18 +87,13 @@ This project includes an end-to-end test suite powered by [Playwright Test](http
     yarn lint
     ```
 
-## Prisma Configuration and Setup
+## Prisma Database Setup
 
-This project uses [Prisma](https://www.prisma.io/) as the ORM for database management. It supports both SQLite and PostgreSQL.
+This project uses [Prisma](https://www.prisma.io/) as the ORM for database management, standardized for PostgreSQL only.
 
 ### Configuration
 
-- Prisma schemas are located in the `prisma/` directory.
-
-  - `models.prisma`: Core application models.
-  - `generated/`: Contains generated schemas for SQLite and PostgreSQL.
-  - `wrappers/`: Wrapper schemas for database providers.
-
+- The Prisma schema is located at `prisma/schema.prisma`.
 - Environment variables for database configuration are managed in the `.env` file.
 
 ### Setup
@@ -109,57 +104,48 @@ This project uses [Prisma](https://www.prisma.io/) as the ORM for database manag
    yarn install
    ```
 
-2. Generate Prisma schemas for your selected database provider:
+2. Generate the Prisma client and ensure your schema is up to date:
 
    ```bash
-   yarn build:prisma-schemas
+   yarn db:generate
    ```
 
-3. Set up your development database:
+3. To apply schema changes to your database, use Prisma Migrate or Push as needed:
 
    ```bash
-   yarn build:dev-db
+   npx prisma migrate dev
+   # or
+   npx prisma db push
    ```
 
-4. For testing, the test database is automatically set up when running tests.
+4. After updating models in `prisma/schema.prisma`, always re-run `yarn db:generate` and commit any changes to generated files.
 
 ## How to Add Model Elements
 
-1. Edit `prisma/models.prisma` to define or update your data models. For example, to add a new field to the `User` model or create a new model, simply edit this file.
-2. After making changes, you must rebuild the generated Prisma schemas for all supported databases:
+1. Edit `prisma/schema.prisma` to define or update your data models.
+2. After making changes, run:
 
    ```bash
-   yarn build:prisma-schemas
+   yarn db:generate
    ```
 
-3. To reset your development database to match the new schema:
-
-   ```bash
-   yarn build:dev-db
-   ```
+3. Commit any changes to generated files.
 
 ## How to Build the Database
 
-To generate the database schema and Prisma client for your current environment:
+To generate the Prisma client for your current environment:
 
 ```bash
-yarn build:prisma-schemas
+yarn db:generate
 ```
 
-## How to Launch a Clean Local SQLite Database for Development
+## How to Launch a Clean Local Database for Development
 
-To reset and initialize a fresh local SQLite database for development, run:
+To reset and initialize a fresh local PostgreSQL database for development, use Prisma's migrate or db push commands as needed. Example:
 
 ```bash
-yarn build:dev-db
+npx prisma migrate reset
 ```
-
-This will:
-
-- Rebuild the Prisma schemas
-- Remove any existing local SQLite database file (`dev.db` by default)
-- Push the latest schema to the database
-- Generate the Prisma client
 
 You can now start your dev server with:
 
@@ -171,6 +157,82 @@ yarn dev
 
 - Fork or clone this repository.
 - Edit `package.json` to update the project name and details.
-- Update or replace models in `prisma/models.prisma`.
-- Run `yarn build:prisma-schemas` and `yarn build:dev-db` to set up your database.
+- Update or replace models in `prisma/schema.prisma`.
+- Run `yarn db:generate` to set up your database.
 - Start developing your app!
+
+## Development Process (2025+)
+
+- **Single Source of Truth for Schema:**
+
+  - All Prisma models and DB schema are defined in `prisma/schema.prisma`.
+  - To update type definitions and Prisma client, run:
+    ```bash
+    yarn generate:schema
+    # or
+    yarn db:generate
+    ```
+  - The devcontainer and CI will ensure the client is always up to date.
+
+- **Database Setup:**
+
+  - Test and dev databases are managed FULL-AUTO in the devcontainer.
+  - Schema is pushed and client generated on container creation; tests only clean data.
+  - No manual DB resets needed for routine development/testing.
+
+- **Testing, Linting, and Type Checking:**
+
+  - All tests (unit and E2E), lint, and typecheck run automatically on commit and in CI.
+  - Playwright browsers and Prisma client are pre-installed in the devcontainer.
+  - To run all checks locally:
+    ```bash
+    yarn lint
+    yarn test
+    yarn test:e2e
+    ```
+
+- **Devcontainer Environment:**
+  - Includes up-to-date Node.js, npm, Git (built from source if needed), and ESLint pre-installed and on the PATH.
+  - No need to install these tools manually.
+
+## Copilot & AI Agent Usage in Dev Container
+
+This project is pre-configured for GitHub Copilot and agent features in VS Code. To use Copilot and access advanced AI features:
+
+1. **Sign in to GitHub**
+
+   - Open the Command Palette (`Cmd+Shift+P` or `Ctrl+Shift+P`).
+   - Type and select `GitHub: Sign in`.
+   - Complete the authentication flow in your browser.
+
+2. **Verify Copilot is Enabled**
+
+   - You should see the Copilot icon in the VS Code status bar.
+   - If you see "Language model unavailable" or cannot select models, ensure you are signed in and have internet access in the devcontainer.
+
+3. **Troubleshooting**
+
+   - If Copilot is not working:
+     - Make sure you are signed in to GitHub inside the devcontainer (not just on your host machine).
+     - Check the "Output" panel in VS Code (select "GitHub Copilot" in the dropdown) for error messages.
+     - Ensure your GitHub account has Copilot access (Copilot Individual, Pro, or Business).
+     - Reload the devcontainer after signing in or updating extensions.
+     - If behind a proxy, configure proxy settings in VS Code or Docker as needed.
+
+4. **Workspace AI/Agent Features**
+   - The workspace is set up to enable Copilot chat, agent, and code search features by default (see `.vscode/settings.json`).
+   - No additional configuration is needed for most users.
+
+## AI & Copilot Process (FULL-AUTO)
+
+- This project is designed for seamless use with GitHub Copilot and AI agents.
+- Copilot and agent features are enabled by default in the devcontainer.
+- **FULL-AUTO:**
+  - When you request FULL-AUTO, the AI agent will resolve issues, run all tests/lint, and commit changes without further prompts.
+  - The agent will not ask you to run commands or make edits it can perform itself.
+  - If blocked, the agent will clearly state what is needed from you.
+- See `.github/copilot‑instructions.md` for detailed Copilot/AI agent usage and expectations.
+
+For more help, see the [GitHub Copilot documentation](https://docs.github.com/en/copilot).
+
+---

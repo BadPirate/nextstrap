@@ -45,3 +45,8 @@ jobs:
         # DATABASE_URL is set by the jest globalSetup script (setup-test-db.js)
         # Add any other necessary env vars here if required by tests
         CI: true # Often useful to indicate running in a CI environment
+
+    - name: Run Playwright e2e tests
+      run: yarn test:e2e
+      env:
+        CI: true

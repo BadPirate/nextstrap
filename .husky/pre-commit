@@ -1,28 +1,29 @@
 #!/usr/bin/env sh
 
-# Load NVM to ensure correct Node version and PATH
-export NVM_DIR="$HOME/.nvm"
-if [ -s "$NVM_DIR/nvm.sh" ]; then
-  . "$NVM_DIR/nvm.sh"  # Source NVM script if it exists
-  # Optionally, add nvm use command here if you need a specific version
-  # nvm use
-elif [ -x "$(command -v brew)" ] && [ -s "$(brew --prefix nvm)/nvm.sh" ]; then
-  . "$(brew --prefix nvm)/nvm.sh" # Source NVM script if installed via Homebrew
-fi
+# Husky pre-commit hook for Nextstrap (dev container)
+# Node, npm, and yarn are available on PATH in the dev container. No nvm required.
 
-# Check if nvm command is available after sourcing
-if command -v nvm &> /dev/null; then
-  # Attempt to set the correct node version path if NVM is active
-  CURRENT_NODE_VERSION=$(nvm current)
-  NVM_NODE_PATH=$(nvm_find_nvmrc | xargs nvm_version_path 2>/dev/null || nvm_version_path "$CURRENT_NODE_VERSION" 2>/dev/null)
-
-  if [ -n "$NVM_NODE_PATH" ]; then
-    export PATH="$NVM_NODE_PATH/bin:$PATH"
-  fi
-else
-  echo "Warning: NVM script not found or NVM command not available. Falling back to system PATH."
-  # Fallback: Add local node_modules/.bin just in case NVM isn't used or fails
-  export PATH="$(cd "$(dirname "$0")/.." && pwd)/node_modules/.bin:$PATH"
+# Run Prisma generate and check for changes
+yarn db:generate
+if ! git diff --quiet -- prisma/schema.prisma prisma/generated/ src/services/db/client.ts; then
+  echo "\n❌ Prisma generated files have changed after running 'yarn db:generate'."
+  echo "Please add and commit the updated generated files before committing."
+  echo "(You may need to run 'yarn db:generate' and 'git add' again.)"
+  exit 1
 fi
 
 npx lint-staged
+
+# Require successful lint, unit tests, and e2e tests before commit
+if ! yarn lint; then
+  echo "\n❌ Linting failed. Please fix lint errors before committing."
+  exit 1
+fi
+if ! yarn test; then
+  echo "\n❌ Unit tests failed. Please fix test failures before committing."
+  exit 1
+fi
+if ! yarn test:e2e; then
+  echo "\n❌ E2E tests failed. Please fix E2E test failures before committing."
+  exit 1
+fi

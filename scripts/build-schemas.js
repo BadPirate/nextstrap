@@ -18,7 +18,6 @@ const models = fs.readFileSync(modelsPath, 'utf-8')
 
 // Providers to generate
 const providers = [
-  { name: 'sqlite', wrapper: 'sqlite.prisma' },
   { name: 'postgresql', wrapper: 'postgresql.prisma' },
 ]
 

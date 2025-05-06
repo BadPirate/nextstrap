@@ -18,23 +18,25 @@ const RootNav = ({ children }: { children: React.ReactNode }) => {
         </Navbar.Brand>
         <Navbar.Text>{`v${appVersion}`}</Navbar.Text>
         {NODE_ENV !== 'production' && (
-          <Navbar.Text className={'ms-auto me-auto text-warning'}>
-            <strong>{NODE_ENV}</strong>
+          <Navbar.Text className={'ms-auto text-warning'}>
+            <strong>{NODE_ENV.toUpperCase()}</strong>
           </Navbar.Text>
         )}
-        {!loading ? (
-          user ? (
-            <Button variant="outline-light" href="/api/auth/signout" onClick={() => signOut()}>
-              Logout
-            </Button>
+        <div className="ms-auto me-3">
+          {!loading ? (
+            user ? (
+              <Button variant="outline-light" onClick={() => signOut()}>
+                Logout
+              </Button>
+            ) : (
+              <Button variant="primary" onClick={() => ssoSignIn()}>
+                Login
+              </Button>
+            )
           ) : (
-            <Button variant="outline-light" href="/api/auth/signin" onClick={() => ssoSignIn()}>
-              Login
-            </Button>
-          )
-        ) : (
-          <Spinner />
-        )}
+            <Spinner />
+          )}
+        </div>
       </Navbar>
       <Container style={{ marginTop: '1em' }}>{children}</Container>
     </div>

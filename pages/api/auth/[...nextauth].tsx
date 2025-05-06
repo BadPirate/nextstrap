@@ -1,7 +1,6 @@
 /* eslint-disable camelcase */
 import NextAuth, { type NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
-import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import config from '@/src/utils/config'
 import prismaClient from '@/src/services/prismaClient'
 
@@ -54,18 +53,27 @@ if (NODE_ENV === 'production') {
   providers.push(
     CredentialsProvider({
       id: 'auth',
-      name: 'DummyAuth',
+      name: `${NODE_ENV} Dummy Auth`,
       credentials: {
         email: { label: 'Email', type: 'text', placeholder: 'you@example.com' },
-        password: { label: 'Password', type: 'text', placeholder: 'test password' },
+        password: { label: 'Password', type: 'password', placeholder: 'test password' },
       },
       async authorize(credentials) {
         if (credentials?.email && credentials?.password) {
-          // Use email as id for consistency and to avoid session errors
+          // Upsert user in the database for dev/test
+          const email = `${NODE_ENV}+${credentials.email}`
+          const user = await prismaClient.user.upsert({
+            where: { email },
+            update: {},
+            create: {
+              email,
+              name: credentials.email,
+            },
+          })
           return {
-            id: credentials.email,
-            name: credentials.email,
-            email: `${NODE_ENV}+${credentials.email}`,
+            id: user.id.toString(),
+            name: user.name,
+            email: user.email,
           }
         }
         return null
@@ -75,9 +83,12 @@ if (NODE_ENV === 'production') {
 }
 
 const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prismaClient),
+  // Remove PrismaAdapter, use JWT sessions
   secret: NEXTAUTH_SECRET,
   providers,
+  session: {
+    strategy: 'jwt',
+  },
   callbacks: {
     async session({ session, token }) {
       // Attach user id to session (extend type)

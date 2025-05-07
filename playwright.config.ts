@@ -2,7 +2,7 @@ import path from 'path'
 import { defineConfig, devices } from '@playwright/test'
 import config from './src/utils/config'
 
-const TEST_PORT = 5000
+const TEST_PORT = process.env.TEST_PORT || 5000
 const baseURL = `http://localhost:${TEST_PORT}`
 
 export default defineConfig({

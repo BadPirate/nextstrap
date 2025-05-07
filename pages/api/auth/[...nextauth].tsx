@@ -38,13 +38,20 @@ if (NODE_ENV === 'production') {
     authorization: { params: { scope: 'openid profile email' } },
     checks: ['state', 'pkce'],
     async profile(profileData: ProfileData) {
-      const { sub, name, email, picture, client_id, iss } = profileData
+      const { name, email, picture, client_id, iss } = profileData
       if (client_id !== OIDC_CONFIG.clientId) throw new Error('Invalid client_id')
       if (iss !== OIDC_CONFIG.issuer) throw new Error('Invalid issuer')
+      // Normalize email
+      const normalizedEmail = email.trim().toLowerCase()
+      await prismaClient.user.upsert({
+        where: { email: normalizedEmail },
+        update: { name },
+        create: { email: normalizedEmail, name },
+      })
       return {
-        id: sub,
+        id: normalizedEmail, // NextAuth requires id
+        email: normalizedEmail,
         name,
-        email,
         image: picture,
       }
     },
@@ -60,20 +67,20 @@ if (NODE_ENV === 'production') {
       },
       async authorize(credentials) {
         if (credentials?.email && credentials?.password) {
-          // Upsert user in the database for dev/test
-          const email = `${NODE_ENV}+${credentials.email}`
+          // Normalize email
+          const normalizedEmail = `${NODE_ENV}+${credentials.email.trim().toLowerCase()}`
           const user = await prismaClient.user.upsert({
-            where: { email },
+            where: { email: normalizedEmail },
             update: {},
             create: {
-              email,
+              email: normalizedEmail,
               name: credentials.email,
             },
           })
           return {
-            id: user.id.toString(),
-            name: user.name,
+            id: normalizedEmail, // NextAuth requires id
             email: user.email,
+            name: user.name,
           }
         }
         return null
@@ -91,16 +98,16 @@ const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async session({ session, token }) {
-      // Attach user id to session (extend type)
+      // Attach user email to session (extend type)
       return {
         ...session,
-        user: session.user ? { ...session.user, id: token.sub } : session.user,
+        user: session.user ? { ...session.user, email: token.email } : session.user,
       }
     },
     async jwt({ token, user }) {
-      // Attach user id to token
-      if (user) {
-        token.sub = user.id
+      // Attach user email to token
+      if (user && user.email) {
+        token.email = user.email
       }
       return token
     },

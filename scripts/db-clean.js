@@ -7,11 +7,7 @@ let databaseUrl = process.env.DATABASE_URL || 'postgresql://localhost:5432/dev';
 // Determine provider from URL prefix
 const provider = 'postgresql';
 // Locate the corresponding generated schema file
-const schemaPath = path.resolve(
-  process.cwd(),
-  'prisma',
-  `${provider}.prisma`,
-);
+const schemaPath = path.resolve(process.cwd(), 'prisma', 'schema.prisma');
 
 // Prepare environment for Prisma CLI
 const env = Object.assign({}, process.env, { DATABASE_URL: databaseUrl });

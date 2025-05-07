@@ -2,12 +2,11 @@ import { signIn } from 'next-auth/react'
 import config from '../utils/config'
 
 const ssoSignIn = async () => {
+  const callbackUrl = window.location.href
   if (config.NODE_ENV === 'production') {
-    const callbackUrl = window.location.href
     signIn('sso', { callbackUrl })
   } else {
-    // Explicitly use the credentials provider in dev/test for reliability
-    signIn('auth')
+    signIn('auth', { callbackUrl })
   }
 }
 

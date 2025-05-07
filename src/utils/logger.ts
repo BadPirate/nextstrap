@@ -6,6 +6,16 @@ import config from './config'
 const enabled = config.NODE_ENV !== 'production' && typeof window === 'undefined'
 
 const logger = {
+  debug: (...args: any[]) => {
+    if (enabled) {
+      console.debug(...args)
+    }
+  },
+  info: (...args: any[]) => {
+    if (enabled) {
+      console.info(...args)
+    }
+  },
   log: (...args: any[]) => {
     if (enabled) {
       console.log(...args)

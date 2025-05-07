@@ -3,9 +3,11 @@ import dotenv from 'dotenv'
 // eslint-disable-next-line import/extensions
 import packageJson from '../../package.json'
 
-// Required environment variables
+// Required environment variables, empty string will be replaced with the value from process.env
+// or throw an error if not set in process.env
 const required = {
   DATABASE_URL: '',
+  NEXTAUTH_SECRET: '',
 }
 
 const NODE_ENV = process.env.NODE_ENV ?? 'development'
@@ -39,11 +41,21 @@ for (const key in env) {
   }
 }
 
+const OIDC_CONFIG = {
+  issuer: process.env.OIDC_ISSUER, // https://example.com
+  clientId: process.env.OIDC_CLIENT_ID,
+  clientSecret: process.env.OIDC_CLIENT_SECRET,
+  wellKnown: process.env.OIDC_WELL_KNOWN, // https://example.com/.well-known/openid-configuration
+}
+
 // Use values directly from package.json
 const config = {
   NODE_ENV,
   NEXT_PUBLIC_APP_NAME: packageJson.name,
   NEXT_PUBLIC_APP_VERSION: packageJson.version,
+  OIDC_CONFIG: Object.values(OIDC_CONFIG).every((v) => v)
+    ? (OIDC_CONFIG as { [K in keyof typeof OIDC_CONFIG]: string })
+    : undefined,
   ...env,
   ...required,
 }

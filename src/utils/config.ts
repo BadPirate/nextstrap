@@ -8,6 +8,9 @@ import packageJson from '../../package.json'
 const required = {
   DATABASE_URL: '',
   NEXTAUTH_SECRET: '',
+  SENDGRID_API_KEY: '',
+  SMTP_FROM: '',
+  BASE_URL: '',
 }
 
 const NODE_ENV = process.env.NODE_ENV ?? 'development'

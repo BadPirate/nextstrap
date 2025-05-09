@@ -22,3 +22,5 @@ jobs:
           yarn build
           yarn test
           yarn test:e2e
+        cacheFrom: type=gha
+        cacheTo: type=gha,mode=max

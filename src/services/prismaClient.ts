@@ -1,18 +1,17 @@
 import { PrismaClient } from '@prisma/client'
 import config from '@/src/utils/config'
 
-/**
- * Test-friendly Prisma client implementation
- *
- * This implementation provides direct configuration of connection strings. It's particularly useful for:
- *
- * 1. Test environments that run outside the Next.js runtime
- * 2. Scenarios requiring custom database configurations
- * 3. Services that need consistent database connections across different environments
- */
+const globalForPrisma = global as unknown as { prisma?: PrismaClient }
 
-const prisma = new PrismaClient({
-  datasources: { db: { url: config.DATABASE_URL } },
-})
+const url = config.DATABASE_URL
+
+const prisma =
+  globalForPrisma.prisma ||
+  new PrismaClient({
+    datasources: { db: { url } },
+    log: ['query', 'info', 'warn', 'error'],
+  })
+
+if (config.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
 
 export default prisma

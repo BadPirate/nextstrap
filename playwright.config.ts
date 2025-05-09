@@ -11,7 +11,7 @@ export default defineConfig({
   retries: 0, // Set retries to 0 to avoid flaky tests and speed up test runs
   outputDir: 'test-results/',
   webServer: {
-    command: 'yarn dev',
+    command: 'bash -c "fuser -k 5000/tcp || true; yarn dev"',
     url: baseURL,
     timeout: 120 * 1000,
     reuseExistingServer: config.CI !== 'true',
@@ -26,6 +26,7 @@ export default defineConfig({
   use: {
     baseURL,
     trace: 'retry-with-trace',
+    video: 'on', // Add this line to enable video recording
     headless: true,
   },
   projects: [

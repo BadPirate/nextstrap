@@ -38,6 +38,7 @@ This project includes a comprehensive set of features designed to maintain high 
 
 - **Bootswatch Theme Support**: Preinstalled with Cyborg theme
 - **Customizable Bootstrap Theme**: Easily swap themes by replacing a single CSS file
+- **Authenticated User API Endpoint**: Provides `/api/user` for fetching the current user's database record, used by the frontend for robust user/session context.
 
 ## Using
 
@@ -152,6 +153,21 @@ You can now start your dev server with:
 ```bash
 yarn dev
 ```
+
+## Scripts
+
+Commonly used yarn scripts for development and maintenance:
+
+- `yarn dev` – Start the Next.js development server.
+- `yarn build` – Build the Next.js app for production.
+- `yarn start` – Start the production server.
+- `yarn lint` – Run Prettier, ESLint, and TypeScript checks.
+- `yarn test` – Run unit tests with Jest.
+- `yarn test:e2e` – Run end-to-end tests with Playwright.
+- `yarn test:codegen` – Launch Playwright codegen for browser test recording.
+- `yarn typecheck` – Run TypeScript type checks only.
+- `yarn generate:schema` – Generate Prisma schemas and initialize the database.
+- `yarn db:generate` – Generate the Prisma client from the schema.
 
 ## How to Use This Template for Your Own Project
 

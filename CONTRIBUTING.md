@@ -46,6 +46,9 @@ This project follows the [Contributor Covenant Code of Conduct](https://www.cont
   - Unit tests: `yarn test`
   - End-to-end tests: `yarn test:e2e`
   - See README.md for more details on testing.
+- **User API & Session Context**:
+  - The `/api/user` endpoint provides authenticated user details from the database.
+  - The frontend uses this endpoint for robust user/session context (see `UserProvider`).
 
 ## Commit Messages
 

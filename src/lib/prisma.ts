@@ -1,4 +1,3 @@
-/* eslint-disable no-trailing-spaces, no-multiple-empty-lines, eol-last */
 import { PrismaClient } from '@prisma/client'
 import config from '../utils/config'
 

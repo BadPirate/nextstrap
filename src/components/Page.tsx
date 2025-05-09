@@ -3,7 +3,7 @@ import { ReactNode } from 'react'
 import RootNav from './RootNav'
 
 const Page = ({ title, children }: { title: string; children: ReactNode }) => (
-  <RootNav>
+  <RootNav title={title}>
     <Head>
       <title>{title}</title>
     </Head>

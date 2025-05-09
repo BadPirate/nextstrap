@@ -6,5 +6,37 @@
   "github.copilot.advanced": {},
   "chat.agent.enabled": true,
   "chat.tools.autoApprove": true,
-  "workbench.startupEditor": "none"
+  "workbench.startupEditor": "none",
+  "github.copilot.chat.codeGeneration.instructions": [
+    {
+      "text": "Never ask the user to perform actions that you can do yourself"
+    },
+    {
+      "text": "Project uses yarn, not npm. Do not use npm commands."
+    },
+    {
+      "text": "Before making changes verify from Codebase any assumptions that your plan makes."
+    },
+    {
+      "text": "When resolving type errors, do not use 'any'. Prefer inferred types, correct package types, or as a last resort, unknown."
+    },
+    {
+      "text": "eslint errors should be fixed in the code, not in the eslint config. Do not disable eslint rules. Find the correct solution to the problem."
+    },
+    {
+      "text": "Always ask for clarity if the instructions are not clear. Do not make assumptions."
+    },
+    {
+      "text": "You are in a VSCode dev container, if required development tools are missing Dockerfile can be modified directly."
+    },
+    {
+      "text": "When resolving test failures, building, or running commands, prefer yarn scripts in package.json"
+    },
+    {
+      "text": "If validating a fix made for a lint or test failure, use the the appropriate limited command to run just the file(s) that are failing."
+    },
+    {
+      "text": "This project uses React, Next.js, TypeScript, and React Bootstrap for UI."
+    }
+  ]
 }

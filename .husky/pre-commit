@@ -3,6 +3,12 @@
 # Husky pre-commit hook for Nextstrap (dev container)
 # Node, npm, and yarn are available on PATH in the dev container. No nvm required.
 
+if ! git diff --quiet; then
+  echo "\n❌ Unstaged changes detected. Please stage all changes before committing."
+  git status
+  exit 1
+fi
+
 # Run Prisma generate and check for changes
 yarn db:generate
 if ! git diff --quiet -- prisma/schema.prisma prisma/generated/ src/services/db/client.ts; then
@@ -12,13 +18,19 @@ if ! git diff --quiet -- prisma/schema.prisma prisma/generated/ src/services/db/
   exit 1
 fi
 
-npx lint-staged
-
 # Require successful lint, unit tests, and e2e tests before commit
 if ! yarn lint; then
   echo "\n❌ Linting failed. Please fix lint errors before committing."
   exit 1
 fi
+
+# Check for unstaged changes after linting
+if ! git diff --quiet; then
+  echo "\n❌ Unstaged changes detected after linting. Please stage all changes before committing."
+  git status
+  exit 1
+fi
+
 if ! yarn test; then
   echo "\n❌ Unit tests failed. Please fix test failures before committing."
   exit 1

@@ -1,5 +1,8 @@
 const nextJest = require('next/jest.js')
 
+// Get the port from environment variable or use default 3000
+const port = process.env.PORT || '3000'
+
 const createJestConfig = nextJest({
   // Provide the path to your Next.js app to load next.config.js and .env files in your test environment
   dir: './',
@@ -11,7 +14,7 @@ const customJestConfig = {
   globalSetup: '<rootDir>/scripts/setup-test-db.js',
   testEnvironment: 'jest-environment-jsdom',
   testEnvironmentOptions: {
-    url: 'http://localhost:3000',
+    url: `http://localhost:${port}`,
   },
   preset: 'ts-jest',
   // Specify __tests__ as the directory for unit tests

@@ -29,7 +29,7 @@ if (typeof window === 'undefined') {
 
 // Optional environment variables with defaults
 const env = {
-  PORT: '3000',
+  PORT: process.env.PORT || '3000',
   CI: 'false',
 }
 

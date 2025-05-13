@@ -4,7 +4,10 @@
   "service": "devcontainer",
   "workspaceFolder": "/workspace",
   "postCreateCommand": "yarn install && yarn prisma generate && yarn playwright install && sh scripts/init-db.sh",
-  "forwardPorts": [3000],
+  "forwardPorts": [3001],
+  "remoteEnv": {
+    "PORT": "3001"
+  },
   "features": {},
   "customizations": {
     "vscode": {

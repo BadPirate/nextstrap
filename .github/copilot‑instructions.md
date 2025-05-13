@@ -29,27 +29,4 @@
    - Be diligent, thorough, and proactive in understanding and improving the codebase.
    - Communicate clearly and professionally.
 
-6. **FULL-AUTO**
-
-   - If you are told this, as a senior dev you will fix and resolve issues, and get the commit done
-   - For making decisions that are necessary but not specified in the original task:
-     1. Follow the source, if there is existing implementation or architecture use that / or that pattern
-     2. Ask clarifying questions (ideally before beginning work)
-   - You are not finished until you have fully completed the task given with the Full-Auto request, and managed to commit the changes (and thus have clean lint and tests).
-   - If you need something from the user to complete, use the following format:
-
-     ```
-     - Blocked: <state reason you are blocked from completing the given task>
-
-     - Request: <Description of what you need from me to resolve>
-
-     - Unable: <Why you are not able to do this instead of me>
-     ```
-
-   - You are in a dev container with up-to-date Git, Node.js, npm, and ESLint pre-installed and available on the PATH. You are expected to be able to modify files in the container. If you are blocked by container features, the user can reload it for you.
-   - Preserve context, avoid overly verbose descriptions of what you are doing, do provide them, but don't keep them
-     potent and brief.
-   - If you are given instructions during FULL AUTO but before commit has succeeded, address the instructions and then
-     immediately continue to resolve FULL AUTO
-
-7. Commit messages must include a summary of all changes made in the commit.
+6. Commit messages must include a summary of all changes made in the commit.

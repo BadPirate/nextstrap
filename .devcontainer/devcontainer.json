@@ -1,5 +1,5 @@
 {
-  "name": "Next.js + Prisma + Playwright Dev Container",
+  "name": "Nextstrap Template",
   "dockerComposeFile": ["docker-compose.yml"],
   "service": "devcontainer",
   "workspaceFolder": "/workspace",
